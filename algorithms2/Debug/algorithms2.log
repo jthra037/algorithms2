@@ -1,0 +1,4 @@
+﻿  main.cpp
+d:\users\dan\my code\c++\algorithms2\algorithms2\main.cpp(33): error C2512: 'Weapon': no appropriate default constructor available
+  d:\users\dan\my code\c++\algorithms2\algorithms2\main.cpp(7): note: see declaration of 'Weapon'
+d:\users\dan\my code\c++\algorithms2\algorithms2\main.cpp(85): warning C4018: '<': signed/unsigned mismatch

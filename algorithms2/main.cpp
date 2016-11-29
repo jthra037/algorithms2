@@ -21,6 +21,119 @@ public:
 		weight = w;
 		cost = c;
 	}
+
+	bool operator<(const Weapon &other)
+	{
+		return weaponName < other.weaponName;
+	}
+};
+
+class bstree
+{
+private:
+
+	class node
+	{
+	public:
+		node(Weapon wep) : value(wep) { }
+		~node() {}
+
+		Weapon value;
+		node *left = nullptr;
+		node *right = nullptr;
+	} *root = nullptr;
+
+public:
+
+	bstree() {}
+	~bstree() {}
+
+	// insertion
+	void put(Weapon value)
+	{
+		node *curr = root;
+
+		while (true)
+		{
+			if (curr == nullptr)
+			{
+				curr = new node(value);
+				return;
+			}
+
+			if (value < curr->value)
+			{
+				curr = curr->left;
+			}
+			else
+			{
+				curr = curr->right;
+			}
+		}
+	}
+
+	// search and retrieval
+	Weapon get(string key)
+	{
+		node *curr = root;
+		while (curr != nullptr)
+		{
+			string currName = curr->value.weaponName;
+			if (key == currName)
+			{
+				return curr->value;
+			}
+			else if (key < currName)
+			{
+				curr = curr->left;
+			}
+			else
+			{
+				curr = curr->right;
+			}
+		}
+		return Weapon("NOT FOUND", 0, 0, 0, 0); // need a better way to do this
+	}
+
+	// delete
+	bool remove(string key)
+	{
+		node *curr = root;
+		while (curr != nullptr)
+		{
+			string currName = curr->value.weaponName;
+			if (key == currName)
+			{
+				delete curr;
+				curr = nullptr;
+				return true;
+			}
+			else if (key < currName)
+			{
+				curr = curr->left;
+			}
+			else
+			{
+				curr = curr->right;
+			}
+		}
+		return false;
+	}
+
+	// in order printing
+	void inorder()
+	{
+		inorder(root);
+	}
+
+	// in order helper function
+	void inorder(node *curr)
+	{
+		if (curr == nullptr) return;
+		inorder(curr->left);
+		cout << curr->value.weaponName << std::endl;
+		inorder(curr->right);
+	}
 };
 
 class hashTable 
@@ -29,7 +142,7 @@ public:
 
 	int tableLength; // records the max size of the table
 	int numItems; // records number of items in the list
-	Weapon * * table; //hashtable itself
+	Weapon **table; //hashtable itself
 
 	hashTable(int size) 
 	{
