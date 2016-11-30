@@ -104,6 +104,17 @@ public:
 		return Weapon("NOT FOUND", 0, 0, 0, 0); // need a better way to do this
 	}
 
+	node* search(node* thisNode, string key)
+	{
+		if (thisNode == nullptr || thisNode->value.weaponName == key)
+			return thisNode;
+
+		if (thisNode->value.weaponName < key)
+			return search(thisNode->right, key);
+
+		return search(thisNode->left, key);
+	}
+
 	// delete
 	bool remove(string key)
 	{
