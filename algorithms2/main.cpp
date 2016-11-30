@@ -104,28 +104,9 @@ public:
 	}
 
 	// delete
-	bool remove(string key)
+	void remove(string key)
 	{
-		node *curr = root;
-		while (curr != nullptr)
-		{
-			string currName = curr->value.weaponName;
-			if (key == currName)
-			{
-				delete curr;
-				curr = nullptr;
-				return true;
-			}
-			else if (key < currName)
-			{
-				curr = curr->left;
-			}
-			else
-			{
-				curr = curr->right;
-			}
-		}
-		return false;
+		root = deleteNode(root, key);
 	}
 
 	node* deleteNode(node* thisNode, string key)
