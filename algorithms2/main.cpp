@@ -282,6 +282,32 @@ void addWeapons(hashTable h) {
 	}
 }
 
+void addWeapons(bstree b) {
+	cout << "***********WELCOME TO THE WEAPON ADDING MENU*********" << endl;
+	string weaponName;
+	int weaponRange;
+	int weaponDamage;
+	float weaponWeight;
+	float weaponCost;
+	cout << "Please enter the NAME of the Weapon ('end' to quit):";
+	cin >> weaponName;
+	while (weaponName.compare("end") != 0)
+	{
+		cout << "Please enter the Range of the Weapon (0-10):";
+		cin >> weaponRange;
+		cout << "Please enter the Damage of the Weapon:";
+		cin >> weaponDamage;
+		cout << "Please enter the Weight of the Weapon (in pounds):";
+		cin >> weaponWeight;
+		cout << "Please enter the Cost of the Weapon:";
+		cin >> weaponCost;
+		Weapon * w = new Weapon(weaponName, weaponRange, weaponDamage, weaponWeight, weaponCost);
+		b.put(*w);
+		cout << "Please enter the NAME of another Weapon ('end' to quit):";
+		cin >> weaponName;
+	}
+}
+
 void showRoom(hashTable ht, Player * p) 
 {
 	string choice;
