@@ -82,14 +82,14 @@ public:
 	}
 
 	// search and retrieval
-	Weapon get(string key)
+	Weapon*  get(string key)
 	{
 		node *curr = search(root, key);
 		
 		if (curr != nullptr)
-			return curr->value;
+			return &curr->value;
 		
-		return Weapon("NOT FOUND", 0, 0, 0, 0); // need a better way to do this
+		return nullptr; // need a better way to do this
 	}
 
 	node* search(node* thisNode, string key)
@@ -289,7 +289,7 @@ void addWeapons(bstree &b) {
 	}
 }
 
-void showRoom(bstree &bt, Player * p)
+void showRoom(bstree bt, Player * p)
 {
 	string choice;
 	cout << "WELCOME TO THE SHOWROOM!!!!" << endl;
@@ -299,8 +299,8 @@ void showRoom(bstree &bt, Player * p)
 	cin >> choice;
 	while (choice.compare("end") != 0 && !p->inventoryFull())
 	{
-		Weapon * w = &bt.get(choice);
-		if (w != NULL)
+		Weapon* w = bt.get(choice);
+		if (w != nullptr)
 		{
 			if (w->cost > p->money)
 			{
