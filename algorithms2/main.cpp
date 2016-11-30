@@ -65,23 +65,7 @@ public:
 			return;
 		}
 
-		while (true)
-		{
-			if (curr == nullptr)
-			{
-				curr = new node(value);
-				return;
-			}
-
-			if (value < curr->value)
-			{
-				curr = curr->left;
-			}
-			else
-			{
-				curr = curr->right;
-			}
-		}
+		insert(curr, value);
 	}
 
 	node* insert(node* thisNode, Weapon &value)
