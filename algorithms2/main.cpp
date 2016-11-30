@@ -26,6 +26,11 @@ public:
 	{
 		return weaponName < other.weaponName;
 	}
+
+	bool operator>(const Weapon &other)
+	{
+		return weaponName > other.weaponName;
+	}
 };
 
 class bstree
@@ -49,50 +54,53 @@ public:
 	~bstree() {}
 
 	// insertion
-	void put(Weapon value)
+	void put(Weapon &value)
 	{
 		node *curr = root;
 
-		while (true)
+		if (curr == nullptr)
 		{
-			if (curr == nullptr)
-			{
-				curr = new node(value);
-				return;
-			}
-
-			if (value < curr->value)
-			{
-				curr = curr->left;
-			}
-			else
-			{
-				curr = curr->right;
-			}
+			curr = new node(value);
+			root = curr;
+			return;
 		}
+
+		insert(curr, value);
+	}
+
+	node* insert(node* thisNode, Weapon &value)
+	{
+		if (thisNode == nullptr)
+			return new node(value);
+
+		if (value < thisNode->value)
+			thisNode->left = insert(thisNode->left, value);
+		else if (value > thisNode->value)
+			thisNode->right = insert(thisNode->right, value);
+
+		return thisNode;
 	}
 
 	// search and retrieval
-	Weapon get(string key)
+	Weapon*  get(string key)
 	{
-		node *curr = root;
-		while (curr != nullptr)
-		{
-			string currName = curr->value.weaponName;
-			if (key == currName)
-			{
-				return curr->value;
-			}
-			else if (key < currName)
-			{
-				curr = curr->left;
-			}
-			else
-			{
-				curr = curr->right;
-			}
-		}
-		return Weapon("NOT FOUND", 0, 0, 0, 0); // need a better way to do this
+		node *curr = search(root, key);
+		
+		if (curr != nullptr)
+			return &curr->value;
+		
+		return nullptr; // need a better way to do this
+	}
+
+	node* search(node* thisNode, string key)
+	{
+		if (thisNode == nullptr || thisNode->value.weaponName == key)
+			return thisNode;
+
+		if (thisNode->value.weaponName < key)
+			return search(thisNode->right, key);
+
+		return search(thisNode->left, key);
 	}
 
 	// delete
@@ -253,10 +261,9 @@ public:
 		}
 		cout << endl;
 	}
-
 };
 
-void addWeapons(hashTable h) {
+void addWeapons(bstree &b) {
 	cout << "***********WELCOME TO THE WEAPON ADDING MENU*********" << endl;
 	string weaponName;
 	int weaponRange;
@@ -265,7 +272,7 @@ void addWeapons(hashTable h) {
 	float weaponCost;
 	cout << "Please enter the NAME of the Weapon ('end' to quit):";
 	cin >> weaponName;
-	while (weaponName.compare("end") != 0) 
+	while (weaponName.compare("end") != 0)
 	{
 		cout << "Please enter the Range of the Weapon (0-10):";
 		cin >> weaponRange;
@@ -276,36 +283,36 @@ void addWeapons(hashTable h) {
 		cout << "Please enter the Cost of the Weapon:";
 		cin >> weaponCost;
 		Weapon * w = new Weapon(weaponName, weaponRange, weaponDamage, weaponWeight, weaponCost);
-		h.put(w);
+		b.put(*w);
 		cout << "Please enter the NAME of another Weapon ('end' to quit):";
 		cin >> weaponName;
 	}
 }
 
-void showRoom(hashTable ht, Player * p) 
+void showRoom(bstree bt, Player * p)
 {
 	string choice;
 	cout << "WELCOME TO THE SHOWROOM!!!!" << endl;
-	ht.printTable();
+	bt.inorder();
 	cout << " You have " << p->money << " money." << endl;
 	cout << "Please select a weapon to buy('end' to quit):";
 	cin >> choice;
-	while (choice.compare("end") != 0 && !p->inventoryFull()) 
+	while (choice.compare("end") != 0 && !p->inventoryFull())
 	{
-		Weapon * w = ht.get(choice);
-		if (w != NULL) 
+		Weapon* w = bt.get(choice);
+		if (w != nullptr)
 		{
 			if (w->cost > p->money)
 			{
 				cout << "Insufficient funds to buy " << w->weaponName << endl;
 			}
-			else 
+			else
 			{
 				p->buy(w);
 				p->withdraw(w->cost);
 			}
 		}
-		else 
+		else
 		{
 			cout << " ** " << choice << " not found!! **" << endl;
 		}
@@ -321,9 +328,9 @@ int main()
 	cout << "Please enter Player name:" << endl;
 	cin >> pname;
 	Player pl(pname, 45);
-	hashTable ht(101);
-	addWeapons(ht);
-	showRoom(ht, &pl);
+	bstree bt;
+	addWeapons(bt);
+	showRoom(bt, &pl);
 	pl.printCharacter();
 
 	return 0;
