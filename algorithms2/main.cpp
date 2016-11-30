@@ -254,32 +254,6 @@ public:
 		cout << endl;
 	}
 
-};
-
-void addWeapons(hashTable h) {
-	cout << "***********WELCOME TO THE WEAPON ADDING MENU*********" << endl;
-	string weaponName;
-	int weaponRange;
-	int weaponDamage;
-	float weaponWeight;
-	float weaponCost;
-	cout << "Please enter the NAME of the Weapon ('end' to quit):";
-	cin >> weaponName;
-	while (weaponName.compare("end") != 0) 
-	{
-		cout << "Please enter the Range of the Weapon (0-10):";
-		cin >> weaponRange;
-		cout << "Please enter the Damage of the Weapon:";
-		cin >> weaponDamage;
-		cout << "Please enter the Weight of the Weapon (in pounds):";
-		cin >> weaponWeight;
-		cout << "Please enter the Cost of the Weapon:";
-		cin >> weaponCost;
-		Weapon * w = new Weapon(weaponName, weaponRange, weaponDamage, weaponWeight, weaponCost);
-		h.put(w);
-		cout << "Please enter the NAME of another Weapon ('end' to quit):";
-		cin >> weaponName;
-	}
 }
 
 void addWeapons(bstree b) {
@@ -306,39 +280,6 @@ void addWeapons(bstree b) {
 		cout << "Please enter the NAME of another Weapon ('end' to quit):";
 		cin >> weaponName;
 	}
-}
-
-void showRoom(hashTable ht, Player * p) 
-{
-	string choice;
-	cout << "WELCOME TO THE SHOWROOM!!!!" << endl;
-	ht.printTable();
-	cout << " You have " << p->money << " money." << endl;
-	cout << "Please select a weapon to buy('end' to quit):";
-	cin >> choice;
-	while (choice.compare("end") != 0 && !p->inventoryFull()) 
-	{
-		Weapon * w = ht.get(choice);
-		if (w != NULL) 
-		{
-			if (w->cost > p->money)
-			{
-				cout << "Insufficient funds to buy " << w->weaponName << endl;
-			}
-			else 
-			{
-				p->buy(w);
-				p->withdraw(w->cost);
-			}
-		}
-		else 
-		{
-			cout << " ** " << choice << " not found!! **" << endl;
-		}
-		cout << "Please select another weapon to buy('end' to quit):";
-		cin >> choice;
-	}
-	cout << endl;
 }
 
 void showRoom(bstree bt, Player * p)
