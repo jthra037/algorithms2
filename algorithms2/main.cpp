@@ -84,23 +84,11 @@ public:
 	// search and retrieval
 	Weapon get(string key)
 	{
-		node *curr = root;
-		while (curr != nullptr)
-		{
-			string currName = curr->value.weaponName;
-			if (key == currName)
-			{
-				return curr->value;
-			}
-			else if (key < currName)
-			{
-				curr = curr->left;
-			}
-			else
-			{
-				curr = curr->right;
-			}
-		}
+		node *curr = search(root, key);
+		
+		if (curr != nullptr)
+			return curr->value;
+		
 		return Weapon("NOT FOUND", 0, 0, 0, 0); // need a better way to do this
 	}
 
