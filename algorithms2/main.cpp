@@ -104,28 +104,50 @@ public:
 	}
 
 	// delete
-	bool remove(string key)
+	void remove(string key)
 	{
-		node *curr = root;
-		while (curr != nullptr)
+		root = deleteNode(root, key);
+	}
+
+	node* deleteNode(node* thisNode, string key)
+	{
+		if (thisNode == nullptr) return thisNode;
+
+		if (key < thisNode->value.weaponName)
+			thisNode->left = deleteNode(thisNode->left, key);
+		else if (key > thisNode->value.weaponName)
+			thisNode->right = deleteNode(thisNode->right, key);
+		else
 		{
-			string currName = curr->value.weaponName;
-			if (key == currName)
+			if (thisNode->left == nullptr)
 			{
-				delete curr;
-				curr = nullptr;
-				return true;
+				node* temp = thisNode->right;
+				delete thisNode;
+				return temp;
 			}
-			else if (key < currName)
+			else if (thisNode->right == nullptr)
 			{
-				curr = curr->left;
+				node* temp = thisNode->left;
+				delete thisNode;
+				return temp;
 			}
-			else
-			{
-				curr = curr->right;
-			}
+			
+			node* temp = inorderSuccessor(thisNode->right);
+
+			thisNode->right = deleteNode(thisNode->right, temp->value.weaponName);
 		}
-		return false;
+
+		return thisNode;
+	}
+
+	node* inorderSuccessor(node* thisNode)
+	{
+		node* current = thisNode;
+
+		while (current->left != nullptr)
+			current = current->left;
+
+		return current;
 	}
 
 	// in order printing
@@ -141,71 +163,6 @@ public:
 		inorder(curr->left);
 		cout << curr->value.weaponName << std::endl;
 		inorder(curr->right);
-	}
-};
-
-class hashTable 
-{
-public:
-
-	int tableLength; // records the max size of the table
-	int numItems; // records number of items in the list
-	Weapon **table; //hashtable itself
-
-	hashTable(int size) 
-	{
-		tableLength = size;
-		numItems = 0;
-		table = new Weapon *[tableLength];
-		for (int i = 0; i < tableLength; i++) 
-		{
-			table[i] = NULL;
-		}
-	}
-
-	int hash(string key) 
-	{
-		int value = 0;
-		for (int i = 0; i < key.length(); i++)
-		{
-			value = value + key[i];
-		}
-		return value % tableLength;
-	}
-
-	void put(Weapon * item) 
-	{
-		int location = hash(item -> weaponName); //gets location in table based on name
-		while (table[location] != NULL) 
-		{
-			location = (location + 1); // look one down
-			location = location % tableLength; // to ensure wraparound at end of array
-		}
-		table[location] = item;
-		numItems++;
-	}
-
-	Weapon * get(string key) 
-	{
-		int location = hash(key); //gets location in table based on key
-		while (table[location] != NULL && key.compare(table[location]->weaponName) != 0) // not empty and not item
-		{ 
-			location = (location + 1); // look one down
-			location = location % tableLength; // to ensure wraparound at end of array
-		}
-		return table[location];
-	}
-
-	void printTable() 
-	{
-		int count = 0;
-		for (int x = 0; x < tableLength; x++) 
-		{
-			if (table[x] != NULL) 
-			{
-				cout << "Name: " << table[x]->weaponName << "   Damage:" << table[x]->damage << "    Cost:" << table[x]->cost << endl;
-			}
-		}
 	}
 };
 
@@ -228,8 +185,9 @@ public:
 
 	void buy(Weapon * w) 
 	{
+		Weapon* thisWeapon = new Weapon(w->weaponName, w->range, w->damage, w->weight, w->cost);
 		cout << w->weaponName << " bought..." << endl;
-		backpack[numItems] = w;
+		backpack[numItems] = thisWeapon;
 		numItems++;
 		cout << numItems;
 	}
@@ -310,6 +268,9 @@ void showRoom(bstree bt, Player * p)
 			{
 				p->buy(w);
 				p->withdraw(w->cost);
+				bt.remove(w->weaponName);
+				cout << "Shop now has: " << endl;
+				bt.inorder();
 			}
 		}
 		else
@@ -333,5 +294,7 @@ int main()
 	showRoom(bt, &pl);
 	pl.printCharacter();
 
+	cout << "Enter anything to quit: " << endl;
+	cin >> pname;
 	return 0;
 }
