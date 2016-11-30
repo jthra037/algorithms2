@@ -128,6 +128,47 @@ public:
 		return false;
 	}
 
+	node* deleteNode(node* thisNode, string key)
+	{
+		if (thisNode == nullptr) return thisNode;
+
+		if (key < thisNode->value.weaponName)
+			thisNode->left = deleteNode(thisNode->left, key);
+		else if (key > thisNode->value.weaponName)
+			thisNode->right = deleteNode(thisNode->right, key);
+		else
+		{
+			if (thisNode->left == nullptr)
+			{
+				node* temp = thisNode->right;
+				delete thisNode;
+				return temp;
+			}
+			else if (thisNode->right == nullptr)
+			{
+				node* temp = thisNode->left;
+				delete thisNode;
+				return temp;
+			}
+			
+			node* temp = inorderSuccessor(thisNode->right);
+
+			thisNode->right = deleteNode(thisNode->right, temp->value.weaponName);
+		}
+
+		return thisNode;
+	}
+
+	node* inorderSuccessor(node* thisNode)
+	{
+		node* current = thisNode;
+
+		while (current->left != nullptr)
+			current = current->left;
+
+		return current;
+	}
+
 	// in order printing
 	void inorder()
 	{
