@@ -185,8 +185,9 @@ public:
 
 	void buy(Weapon * w) 
 	{
+		Weapon* thisWeapon = new Weapon(w->weaponName, w->range, w->damage, w->weight, w->cost);
 		cout << w->weaponName << " bought..." << endl;
-		backpack[numItems] = w;
+		backpack[numItems] = thisWeapon;
 		numItems++;
 		cout << numItems;
 	}
@@ -293,5 +294,7 @@ int main()
 	showRoom(bt, &pl);
 	pl.printCharacter();
 
+	cout << "Enter anything to quit: " << endl;
+	cin >> pname;
 	return 0;
 }
