@@ -26,6 +26,11 @@ public:
 	{
 		return weaponName < other.weaponName;
 	}
+
+	bool operator>(const Weapon &other)
+	{
+		return weaponName > other.weaponName;
+	}
 };
 
 class bstree
@@ -49,9 +54,16 @@ public:
 	~bstree() {}
 
 	// insertion
-	void put(Weapon value)
+	void put(Weapon &value)
 	{
 		node *curr = root;
+
+		if (curr == nullptr)
+		{
+			curr = new node(value);
+			root = curr;
+			return;
+		}
 
 		while (true)
 		{
@@ -70,6 +82,19 @@ public:
 				curr = curr->right;
 			}
 		}
+	}
+
+	node* insert(node* thisNode, Weapon &value)
+	{
+		if (thisNode == nullptr)
+			return new node(value);
+
+		if (value < thisNode->value)
+			thisNode->left = insert(thisNode->left, value);
+		else if (value > thisNode->value)
+			thisNode->right = insert(thisNode->right, value);
+
+		return thisNode;
 	}
 
 	// search and retrieval
@@ -253,10 +278,9 @@ public:
 		}
 		cout << endl;
 	}
+};
 
-}
-
-void addWeapons(bstree b) {
+void addWeapons(bstree &b) {
 	cout << "***********WELCOME TO THE WEAPON ADDING MENU*********" << endl;
 	string weaponName;
 	int weaponRange;
@@ -282,7 +306,7 @@ void addWeapons(bstree b) {
 	}
 }
 
-void showRoom(bstree bt, Player * p)
+void showRoom(bstree &bt, Player * p)
 {
 	string choice;
 	cout << "WELCOME TO THE SHOWROOM!!!!" << endl;
