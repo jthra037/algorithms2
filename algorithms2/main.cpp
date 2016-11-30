@@ -380,9 +380,9 @@ int main()
 	cout << "Please enter Player name:" << endl;
 	cin >> pname;
 	Player pl(pname, 45);
-	hashTable ht(101);
-	addWeapons(ht);
-	showRoom(ht, &pl);
+	bstree bt;
+	addWeapons(bt);
+	showRoom(bt, &pl);
 	pl.printCharacter();
 
 	return 0;
