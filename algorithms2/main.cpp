@@ -267,6 +267,9 @@ void showRoom(bstree bt, Player * p)
 			{
 				p->buy(w);
 				p->withdraw(w->cost);
+				bt.remove(w->weaponName);
+				cout << "Shop now has: " << endl;
+				bt.inorder();
 			}
 		}
 		else
