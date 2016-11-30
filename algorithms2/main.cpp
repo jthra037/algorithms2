@@ -315,6 +315,39 @@ void showRoom(hashTable ht, Player * p)
 	cout << endl;
 }
 
+void showRoom(bstree bt, Player * p)
+{
+	string choice;
+	cout << "WELCOME TO THE SHOWROOM!!!!" << endl;
+	bt.inorder();
+	cout << " You have " << p->money << " money." << endl;
+	cout << "Please select a weapon to buy('end' to quit):";
+	cin >> choice;
+	while (choice.compare("end") != 0 && !p->inventoryFull())
+	{
+		Weapon * w = &bt.get(choice);
+		if (w != NULL)
+		{
+			if (w->cost > p->money)
+			{
+				cout << "Insufficient funds to buy " << w->weaponName << endl;
+			}
+			else
+			{
+				p->buy(w);
+				p->withdraw(w->cost);
+			}
+		}
+		else
+		{
+			cout << " ** " << choice << " not found!! **" << endl;
+		}
+		cout << "Please select another weapon to buy('end' to quit):";
+		cin >> choice;
+	}
+	cout << endl;
+}
+
 int main() 
 {
 	string pname;
