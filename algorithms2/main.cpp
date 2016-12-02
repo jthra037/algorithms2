@@ -119,20 +119,21 @@ public:
 			thisNode->right = deleteNode(thisNode->right, key);
 		else
 		{
-			if (thisNode->left == nullptr)
+			if (thisNode->right == nullptr)
+			{
+				node* temp = thisNode->left;
+				delete thisNode;
+				return temp;
+			} else if (thisNode->left == nullptr)
 			{
 				node* temp = thisNode->right;
 				delete thisNode;
 				return temp;
 			}
-			else if (thisNode->right == nullptr)
-			{
-				node* temp = thisNode->left;
-				delete thisNode;
-				return temp;
-			}
 			
 			node* temp = inorderSuccessor(thisNode->right);
+
+			thisNode->value = temp->value;
 
 			thisNode->right = deleteNode(thisNode->right, temp->value.weaponName);
 		}
