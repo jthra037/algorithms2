@@ -189,7 +189,6 @@ public:
 		cout << w->weaponName << " bought..." << endl;
 		backpack[numItems] = thisWeapon;
 		numItems++;
-		cout << numItems;
 	}
 
 	void withdraw(float amt) 
@@ -269,7 +268,12 @@ void showRoom(bstree bt, Player * p)
 				p->buy(w);
 				p->withdraw(w->cost);
 				bt.remove(w->weaponName);
-				cout << "Shop now has: " << endl;
+				cout << endl << p->name << " now has: " << endl;
+				for (int i = 0; i < p->numItems; i++)
+				{
+					cout << p->backpack[i]->weaponName << endl;
+				}
+				cout << endl << "Shop now has: " << endl;
 				bt.inorder();
 			}
 		}
